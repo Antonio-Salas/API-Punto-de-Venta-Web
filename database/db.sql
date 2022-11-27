@@ -10,8 +10,8 @@ CREATE TABLE categoria (
 INSERT INTO categoria (nombre, descripcion) VALUES ('Cereal','');
 SELECT * FROM categoria;
 
-CREATE TABLE articulo(
-    idarticulo INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE productos(
+    idproducto INT AUTO_INCREMENT PRIMARY KEY,
     idcategoria INT NOT NULL,
     codigo VARCHAR(50) NULL,
     nombre VARCHAR(50) NOT NULL UNIQUE,
@@ -54,11 +54,11 @@ CREATE TABLE ingreso(
 CREATE TABLE detalle_ingreso(
 	iddetalle_ingreso INT AUTO_INCREMENT PRIMARY KEY,
     idingreso INT NOT NULL,
-    idarticulo INT NOT NULL,
+    idproducto INT NOT NULL,
     cantidad INT NOT NULL,
     precio float(11,2),
     FOREIGN KEY (idingreso) REFERENCES ingreso (idingreso) ON DELETE CASCADE,
-    FOREIGN KEY (idarticulo) REFERENCES articulo (idarticulo)
+    FOREIGN KEY (idproducto) REFERENCES productos (idproducto)
 );
 CREATE TABLE venta(
 	idventa INT AUTO_INCREMENT PRIMARY KEY,
@@ -71,9 +71,9 @@ CREATE TABLE venta(
 CREATE TABLE detalle_venta(
 	iddetalle_venta INT AUTO_INCREMENT PRIMARY KEY,
     idventa INT NOT NULL,
-    idarticulo INT NOT NULL,
+    idproducto INT NOT NULL,
     cantidad INT NOT NULL,
     precio float(11,2),
     FOREIGN KEY (idventa) REFERENCES venta(idventa) ON DELETE CASCADE,
-    FOREIGN KEY (idarticulo) REFERENCES articulo (idarticulo)
+    FOREIGN KEY (idproducto) REFERENCES productos (idproducto)
 );
