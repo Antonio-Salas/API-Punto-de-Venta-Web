@@ -4,7 +4,9 @@ import productosRoutes from './routes/productos.routes.js'
 
 const app = express()
 
+app.use(express.json())
+
 app.use(indexRoutes)
-app.use(productosRoutes)
+app.use('/api/', productosRoutes)
 
 app.listen(3000)
