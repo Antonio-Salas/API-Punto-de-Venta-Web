@@ -1,10 +1,13 @@
 import {pool} from '../db.js'
+import bcrypt from 'bcryptjs'
+
 
 
 export const getUsuarios = async (req, res) => {
    try {
     const [rows] = await pool.query('SELECT * FROM usuario')
-    res.json(rows)
+    res.send({rows})
+    //res.json(rows)
    } catch (error) {
     return res.status(500).json({
         message: 'Something goes wrong'
@@ -38,20 +41,19 @@ export const createUsuario = async (req, res) => {
         telefono
     }
     const [rows1] = await pool.query('INSERT INTO persona SET ? ',[newPersona]);
-
+    
     try {
     const {idpersona, rol, nombre_usuario, email, password} = req.body
-    let passwordEncrypted = await bcrypt.hash(password,8)
-    console.log(passwordEncrypted) 
+    let passwordEncrypted = await bcrypt.hash(password,8);
+    console.log(passwordEncrypted)
     const newUsuario = {
         idpersona:rows1.insertId,
         rol, 
         nombre_usuario, 
         email, 
-        password
-    }
-    
-
+        password:passwordEncrypted
+    } 
+    console.log(newUsuario)
     const [rows] = await pool.query('INSERT INTO usuario  SET ?', [ newUsuario ]);
     res.send({
         idusuario:rows.insertId,
@@ -59,7 +61,7 @@ export const createUsuario = async (req, res) => {
         rol,
         nombre_usuario,
         email,
-        password,
+        password:passwordEncrypted
     })
     
 } catch (error) {
@@ -86,10 +88,15 @@ try {
 
 export const updateUsuario = async (req, res) => {
     const {id} = req.params
-    const { idpersona, rol, nombre_usuario, email, password} = req.body
+    const { email, password} = req.body
+    let passwordEncrypted = await bcrypt.hash(password,8)
     try {
-    const [result] = await pool.query('UPDATE usuario SET idpersona = IFNULL(?,idpersona), rol = IFNULL(?,rol), nombre_usuario = IFNULL(?,nombre_usuario), email = IFNULL(?,email), password = IFNULL(?,password) WHERE idusuario = ?', [idpersona, rol, nombre_usuario, email, password, id])
-
+        const upUser = {
+            email,
+            password:passwordEncrypted,
+        }
+    
+    const [result] = await pool.query('UPDATE usuario SET ? WHERE idusuario = ?', [ upUser, id])
     console.log(result)
 
     if (result.affectedRows === 0) return res.status(404).json({
