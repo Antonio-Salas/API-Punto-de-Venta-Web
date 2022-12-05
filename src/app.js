@@ -3,6 +3,7 @@ import cors from 'cors'
 import indexRoutes from './routes/index.routes.js'
 import productosRoutes from './routes/productos.routes.js'
 import registroRoutes from './routes/registro.routes.js'
+import autentiRoutes from './routes/autentificacion.routes.js'
 
 const app = express()
 app.use(cors())
@@ -12,6 +13,7 @@ app.use(express.json())
 app.use(indexRoutes)
 app.use('/api/', productosRoutes)
 app.use('/api/', registroRoutes)
+app.use('/api/', autentiRoutes)
 
 app.use((req,res, next) => {
     res.status(404).json({

@@ -1,5 +1,5 @@
 import {pool} from '../db.js'
-import bcrypt from 'bcryptjs'
+import {encrypt} from '../helpers/handleBcrypt.js'
 
 
 
@@ -7,7 +7,6 @@ export const getUsuarios = async (req, res) => {
    try {
     const [rows] = await pool.query('SELECT * FROM usuario')
     res.send({rows})
-    //res.json(rows)
    } catch (error) {
     return res.status(500).json({
         message: 'Something goes wrong'
@@ -44,7 +43,7 @@ export const createUsuario = async (req, res) => {
     
     try {
     const {idpersona, rol, nombre_usuario, email, password} = req.body
-    let passwordEncrypted = await bcrypt.hash(password,8);
+    let passwordEncrypted = await encrypt(password);
     console.log(passwordEncrypted)
     const newUsuario = {
         idpersona:rows1.insertId,
@@ -89,7 +88,7 @@ try {
 export const updateUsuario = async (req, res) => {
     const {id} = req.params
     const { email, password} = req.body
-    let passwordEncrypted = await bcrypt.hash(password,8)
+    let passwordEncrypted = await encrypt(password)
     try {
         const upUser = {
             email,
