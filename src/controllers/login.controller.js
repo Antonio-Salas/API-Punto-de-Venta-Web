@@ -19,7 +19,9 @@ export const postLogin = async (req, res) => {
     //  }) 
      res.send(user)
         }else{
-            res.send('Usuario y/o contraseña no introducidas')
+            res.status(500).json({
+                message: 'Usuario y/o contraseña no encontrada'
+            })
         }
     } catch (error) {
      return res.status(500).json({
